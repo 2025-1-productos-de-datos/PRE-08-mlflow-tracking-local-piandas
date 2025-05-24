@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Master/1Er/Productos_Datos/PRE-08-mlflow-tracking-local-piandas/my_mlruns/565231125061412194/abe2a520ec5d48d89488a12fe3e2a95b/artifacts
+end_time: 1748100275559
+entry_point_name: ''
+experiment_id: '565231125061412194'
+lifecycle_stage: active
+run_id: abe2a520ec5d48d89488a12fe3e2a95b
+run_name: knn_a5dd6fd2
+run_uuid: abe2a520ec5d48d89488a12fe3e2a95b
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1748100275503
+status: 3
+tags: []
+user_id: santi

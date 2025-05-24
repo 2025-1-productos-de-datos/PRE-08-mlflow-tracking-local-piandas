@@ -1,0 +1,6 @@
+artifact_location: file:///C:/Master/1Er/Productos_Datos/PRE-08-mlflow-tracking-local-piandas/my_mlruns/565231125061412194
+creation_time: 1748100125353
+experiment_id: '565231125061412194'
+last_update_time: 1748100125353
+lifecycle_stage: active
+name: wine_quality_experiment
