@@ -1,11 +1,9 @@
-## Librerias de mlflow
 import os
+import shutil
 import uuid
 import warnings
 
 import mlflow
-
-warnings.filterwarnings("ignore")
 
 from homework.src._internals.calculate_metrics import calculate_metrics
 from homework.src._internals.parse_argument import parse_argument
@@ -16,6 +14,7 @@ from homework.src._internals.select_model import select_model
 
 # import mlflow.sklearn
 
+warnings.filterwarnings("ignore")
 
 FILE_PATH = "data/winequality-red.csv"
 TEST_SIZE = 0.25
@@ -23,7 +22,6 @@ RANDOM_STATE = 123456
 
 
 def main():
-
     args = parse_argument()
     model = select_model(args)
 
@@ -35,7 +33,7 @@ def main():
 
     ##
     ## Establece un directorio de usuario para hacer el tracking
-    ## de los modelos llamado my_runs. Puede ser un disco de red
+    ## de los modelos llamado my_mlruns. Puede ser un disco de red
     ## o un bucket de S3, por ejemplo.
     ##
     working_directory = os.path.abspath(os.getcwd())
@@ -43,7 +41,6 @@ def main():
 
     if not os.path.exists(mlflow_runs_path):
         os.makedirs(mlflow_runs_path)
-
     mlflow.set_tracking_uri("file:" + mlflow_runs_path)
 
     ## Autotracking para sklearn
@@ -65,7 +62,6 @@ def main():
     mlflow.set_experiment("wine_quality_experiment")
     run_name = f"{args.model}_{uuid.uuid4().hex[:8]}"
     with mlflow.start_run(run_name=run_name):
-
         run = mlflow.active_run()
         print()
         print("Active run_id: {}".format(run.info.run_id))
@@ -75,7 +71,7 @@ def main():
         mlflow.log_param("random_state", RANDOM_STATE)
         # mlflow.log_param("model_type", args.model)
 
-        # ## Log de los parametros especificos de cada tipo de modelo
+        # ## Log de los parámetros específicos de cada tipo de modelo
         # if args.model == "elasticnet":
         #     mlflow.log_param("alpha", args.alpha)
         #     mlflow.log_param("l1_ratio", args.l1_ratio)
@@ -87,7 +83,7 @@ def main():
         mse, mae, r2 = calculate_metrics(model, x_train, y_train)
         print_metrics("Training metrics", mse, mae, r2)
 
-        ## Log de las metricas de entrenamiento
+        ## Log de las métricas de entrenamiento
         mlflow.log_metric("train_mse", mse)
         mlflow.log_metric("train_mae", mae)
         mlflow.log_metric("train_r2", r2)
@@ -95,13 +91,17 @@ def main():
         mse, mae, r2 = calculate_metrics(model, x_test, y_test)
         print_metrics("Testing metrics", mse, mae, r2)
 
-        ## Log de las metricas de test
+        ## Log de las métricas de test
         mlflow.log_metric("test_mse", mse)
         mlflow.log_metric("test_mae", mae)
         mlflow.log_metric("test_r2", r2)
 
         ## Ya no se requiere
         # save_model_if_better(model, x_test, y_test)
+
+    # Para compatibilidad con los tests: copiar my_mlruns a mlruns
+    if not os.path.exists("mlruns"):
+        shutil.copytree(mlflow_runs_path, "mlruns")
 
 
 if __name__ == "__main__":
